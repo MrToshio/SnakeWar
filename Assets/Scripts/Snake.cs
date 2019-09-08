@@ -45,6 +45,11 @@ public class Snake : MonoBehaviour
     
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            spell = Spell.TP;
+        }
+
         if (state == State.Alive){
             HandleInput();
             HandleMovement();
@@ -54,9 +59,6 @@ public class Snake : MonoBehaviour
     }
     
     private void HandleInput() {
-        if (Input.GetKeyDown("a")){
-            spell = Spell.TP;
-        }
         if (Input.GetKeyDown(KeyCode.UpArrow)){
             if (gridMoveDirection.y != -1){
                 if (spell == Spell.TP){
@@ -106,8 +108,14 @@ public class Snake : MonoBehaviour
     private void HandleMovement()
     {
         gridMoveTimer += Time.deltaTime;
+        if (spell == Spell.TP)
+        {
+            gridPosition += gridMoveDirection;
+            spell = Spell.Nothing;
 
-        if(gridMoveTimer > gridMoveTimerMax){
+        }
+
+        if (gridMoveTimer > gridMoveTimerMax){
 
             movePositionGridList.Insert(0,gridPosition);
 
@@ -130,7 +138,7 @@ public class Snake : MonoBehaviour
                 CMDebug.TextPopup("DEAD", transform.position);
                 state = State.Dead;
             }
-            spell = Spell.Nothing;
+            Debug.Log("removal tp");
             transform.eulerAngles = new Vector3(0,0,getAngleFromVector(gridMoveDirection)-90);
 
         }
